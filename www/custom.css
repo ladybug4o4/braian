@@ -1,0 +1,53 @@
+body{
+    min-height: 611px;
+    height: auto;
+    max-width: 1500px;
+    margin: auto;
+        }
+    .selectize-dropdown-content{
+                 height: 1000px;
+                 width: 1000px;
+                 background-color: #CAB2D6;
+                }
+    .selectize-control .selectize-input {
+                max-height: 100px;
+                overflow-y: auto;
+                # background: #CAB2D6;
+                }
+
+    .skin-blue .main-header .logo {
+                              background-color: #6A3D9A;
+                              align: center;
+                              }
+    .skin-blue .main-header .navbar {
+                              background-color: #CAB2D6;
+    }
+
+    .irs-bar { 
+        background: #CAB2D6; 
+    } 
+    .irs-single { 
+        background: #6A3D9A; 
+    } 
+    .irs-from { 
+        background: #6A3D9A; 
+    } 
+    .irs-to { 
+        background: #6A3D9A; 
+    } 
+    .irs-bar-edge { 
+        background: #6A3D9A; 
+    } 
+    .myClass { 
+            font-size: 13px;
+            line-height: 50px;
+            text-align: left;
+            font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;
+            font-style: italic;
+            padding: 20px;
+            overflow: hidden;
+            color: black;
+    }
+
+    .nav-tabs { background-color: #CAB2D6 }
+    .nav-tabs-custom .nav-tabs li.active { border-top-color: #6A3D9A; }
