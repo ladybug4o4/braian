@@ -7,10 +7,9 @@ library(ape)
 library(TSclust)
 ## https://danepubliczne.gov.pl/dataset/najpopularniejsze-imiona-w-polsce
 
-DATA <- read.csv('Najpopularniejsze-imiona-w-Polsce-w-latach-2000-2017.csv', sep=';')
+DATA <- read.csv('Najpopularniejsze-imiona-w-Polsce-w-latach-2000-2017.csv', sep=';', fileEncoding = "UTF-8")
 dissNames_boys <- readRDS('dissNames_boys.rds')
 dissNames_girls <- readRDS('dissNames_girls.rds')
-
 
 ## wyliczam % pokrycia urodzen najpopularniejszymi imionami
 k <- split(DATA, DATA$Płeć)
