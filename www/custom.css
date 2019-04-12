@@ -7,36 +7,36 @@ body{
     .selectize-dropdown-content{
                  height: 1000px;
                  width: 1000px;
-                 background-color: #CAB2D6;
+                 background-color: #6ab187;
                 }
     .selectize-control .selectize-input {
                 max-height: 100px;
                 overflow-y: auto;
-                # background: #CAB2D6;
+                # background: #6ab187;
                 }
 
     .skin-blue .main-header .logo {
-                              background-color: #6A3D9A;
+                              background-color: #20948B;
                               align: center;
                               }
     .skin-blue .main-header .navbar {
-                              background-color: #CAB2D6;
+                              background-color: #6ab187;
     }
 
     .irs-bar { 
-        background: #CAB2D6; 
+        background: #6ab187; 
     } 
     .irs-single { 
-        background: #6A3D9A; 
+        background: #20948B; 
     } 
     .irs-from { 
-        background: #6A3D9A; 
+        background: #20948B; 
     } 
     .irs-to { 
-        background: #6A3D9A; 
+        background: #20948B; 
     } 
     .irs-bar-edge { 
-        background: #6A3D9A; 
+        background: #20948B; 
     } 
     .myClass { 
             font-size: 13px;
@@ -49,5 +49,5 @@ body{
             color: black;
     }
 
-    .nav-tabs { background-color: #CAB2D6 }
-    .nav-tabs-custom .nav-tabs li.active { border-top-color: #6A3D9A; }
+    .nav-tabs { background-color: #6ab187 }
+    .nav-tabs-custom .nav-tabs li.active { border-top-color: #20948B; }

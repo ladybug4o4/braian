@@ -1,15 +1,18 @@
 library(shinydashboard)
 library(ggplot2)
 library(reshape2)
+# devtools::install_version('plotly', version='4.7.0')
 library(plotly)
 library(dplyr)
 library(ape)
-library(TSclust)
+# library(TSclust)
 ## https://danepubliczne.gov.pl/dataset/najpopularniejsze-imiona-w-polsce
 
-DATA <- read.csv('Najpopularniejsze-imiona-w-Polsce-w-latach-2000-2017.csv', sep=';', fileEncoding = "UTF-8")
+# DATA <- read.csv('Najpopularniejsze-imiona-w-Polsce-w-latach-2000-2017.csv', sep=';', fileEncoding = "UTF-8")
+DATA <- read.csv('Imiona_nadane_wPolsce_w_latach_2000-2018.csv', sep=',', fileEncoding = "UTF-8")
 dissNames_boys <- readRDS('dissNames_boys.rds')
 dissNames_girls <- readRDS('dissNames_girls.rds')
+YEAR <- 2018
 
 ## wyliczam % pokrycia urodzen najpopularniejszymi imionami
 k <- split(DATA, DATA$Płeć)
@@ -27,8 +30,8 @@ df_coverage <- k2
 
 
 ui <- dashboardPage(
-  title = 'BRAIAN', 
-  header = dashboardHeader(title = 'BRAIAN', titleWidth = 200),
+  title = 'BRAIAN2018', 
+  header = dashboardHeader(title = 'BRAIAN2018', titleWidth = 200),
   sidebar = dashboardSidebar(disable = T),
   body = dashboardBody(
     tags$head(
@@ -41,7 +44,7 @@ ui <- dashboardPage(
     # Boxes need to be put in a row (or column)
     fluidRow(
       box(width = 4, height=1600,
-          sliderInput('rok','Rok', value = 2017, min=2000, max=2017, sep='', step=1),
+          sliderInput('rok','Rok', value = YEAR, min=2000, max=YEAR, sep='', step=1),
           plotlyOutput("oneName"),
           checkboxInput('cum', 'Skumulowane sumy', value=FALSE),
           uiOutput('coverageInfo'),
@@ -54,7 +57,7 @@ ui <- dashboardPage(
           ),
       box(width=8, height = 1600,
           sliderInput('range','Ranking popularności imion ... w roku ..., miejsca:',
-                      value = c(1,15), min=1, max=250),
+                      value = c(1,10), min=1, max=250),
           helpText("(chwytając suwak na środku możesz przesunąć cały zakres)"),
           selectInput('imiona', label=NULL,
                       choices = c(), 
@@ -64,7 +67,7 @@ ui <- dashboardPage(
           radioButtons('plec', label=NULL,
                        choiceNames = c('chłopcy', 'dziewczynki'),
                        choiceValues = list('M','K'),
-                       selected='K', inline = TRUE),
+                       selected='M', inline = TRUE),
       tabBox(width=15,
              tabPanel('Popularność imion', icon=icon('area-chart'),
                       plotlyOutput("trendPlot", height='900px')
@@ -136,8 +139,8 @@ server <- function(input, output, session) {
   output$coveragePlot <- renderPlotly({
     ggplot(data = df_coverage, aes(x=`Liczba imion`, y=`Pokrycie [%]`, color=Rok)) +
       geom_line() + facet_grid(Płeć~.) + 
-      scale_color_gradient(high='#6A3D9A', low='#CAB2D6') +
-      geom_line(data=df_coverage[df_coverage$Rok == input$rok,], color='red') +
+      scale_color_gradient(high="#DE7A22",low='#F4CC70') +
+      geom_line(data=df_coverage[df_coverage$Rok == input$rok,], color='darkseagreen') +
       labs(title = 'Zróżnicowanie imion w kolejnych latach',
            y = '% pokrycia wszystkich dzieci') +
       theme(legend.position='none') -> gg
@@ -173,7 +176,7 @@ server <- function(input, output, session) {
       need(dim(k)[1] > 0, message = "ładuję...")
     )
     
-    gg1 <- ggplot(data=melt(k), aes(x=variable, y=value, group=`Imię`, color=`Imię`)) + geom_line() +
+    gg1 <- ggplot(data=melt(k), aes_string(x='variable', y='value', group='Imię', color='Imię')) + geom_line() +
       theme(axis.text.x = element_text(angle=45)) +
       labs(y=sprintf('Liczba nadań imienia na 1000 %s', odmiana()), x='', color='')
     gg1 <- ggplotly(gg1)
@@ -184,7 +187,8 @@ server <- function(input, output, session) {
     
     k <- df_fraq()
     k <- k[k$`Imię` %in% input$imiona,]
-    gg2 <- ggplot(data=melt(k), aes(x=variable, y=value, fill=`Imię`, group=`Imię`)) +
+    
+    gg2 <- ggplot(data=melt(k), aes_string(x='variable', y='value', fill='Imię', group='Imię')) +
       geom_area(stat = 'identity') +
       theme(axis.text.x = element_text(angle = 45)) +
       labs(y=sprintf('%% wszystkich urodzonych w %s roku %s', input$rok, odmiana()), title='Popularność imion i pokrycie populacji',
@@ -216,7 +220,7 @@ server <- function(input, output, session) {
            aes(y=Liczba, x=Rok, fill=`Imię`)) + geom_bar(width=.6, stat='identity') +
       scale_y_continuous(breaks = brks, labels = lbls) +
       coord_flip() +
-      scale_fill_manual(values=c("#CAB2D6", "#6A3D9A")) +
+      scale_fill_manual(values=c("#DE7A22", "#F4CC70")) +
       labs(title = sprintf('Najpopularniejsze imiona w %i', input$rok), fill='') +
       theme(legend.position = 'bottom') -> gg
     ggplotly(gg)
