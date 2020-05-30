@@ -1,4 +1,4 @@
-## BRAIAN - Barwny Retrospektywny Analizator Imion Aplikowanych Noworodkom
+## BRAIAN - Bardzo Rzetelny Asystent Imion Aplikowanych Noworodkom
 
 Jest to narzędzie do wglądu w trendy nadawanych imion. Bazuje na otwartych [danych publicznych](https://dane.gov.pl/dataset/219) z lat 2000-2017. Pozwala:
 
