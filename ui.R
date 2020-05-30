@@ -91,7 +91,7 @@ dashboardPage(
                                 actionButton('opts3', '', icon = icon('cog', lib='glyphicon'))
                         ))),
                         conditionalPanel(condition="input.opts3 % 2 == 1", wellPanel(
-                            sliderInput('nclust', 'Siła podobieństwa (luźno podobne <-> bardzo podobne)', value=50, min=2, max=100)
+                            sliderInput('nclust', 'Siła podobieństwa (luźno podobne <-> bardzo podobne)', value=25, min=2, max=50)
                         )),
                         plotOutput("dendro", height='1000px', width='100%'),
 
