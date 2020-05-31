@@ -75,12 +75,12 @@ dashboardPage(
                  h3('Podobne imiona i rekomendacje'),
                  p('W tym miejscu możesz podać ulubione imię, a Asystent bardzo rzetelnie podpowie, jakie inne imiona mogą Ci się podobać.'),
                  searchInput(
-                                  inputId = "search", label = '',
-                                  placeholder = "znajdź imię na mapie",
-                                  btnSearch = icon("search"),
-                                  btnReset = icon("remove"),
-                                  width = "300px"
-                                ),
+                                      inputId = "search", label = '',
+                                      placeholder = "znajdź imię na mapie",
+                                      btnSearch = icon("search"),
+                                      btnReset = icon("remove"),
+                                      width = "300px"
+                                    ),
                  conditionalPanel(condition="!input.switch2", plotOutput("names_map", height='600px')),
                  conditionalPanel(condition="input.switch2", plotOutput("dendro", height='1000px', width='100%')),
                  fluidRow(column(width=3,
@@ -97,7 +97,6 @@ dashboardPage(
                                 ),
                             conditionalPanel(condition="!input.switch2", #wellPanel(width='50%',
                                  tags$style(type = "text/css", ".irs-grid-pol.small {height: 0px;}"),
-
                                     sliderInput('n_sim', NULL, value=5, min=1, max=50, step=1, width='100%')
                                 )
                  )))

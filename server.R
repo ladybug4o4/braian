@@ -283,11 +283,16 @@ function(input, output, session) {
 
 
     })
+
     output$names_recomm <- renderText({
         df <- similar_names()
-        df <- df[order(df$r2), ]
-        paste(sprintf('Jeśli podoba ci się imię %s, mogą spodobać ci się również: ', input$imie),
-                paste0(as.character(df$names[2:6]), collapse=', '), '.')
+        if(toupper(input$search) %in% rownames(df)){
+            df <- df[order(df$r2), ]
+            paste(sprintf('Jeśli podoba ci się imię %s, mogą spodobać ci się również: ', input$search),
+                    paste0(as.character(df$names[2:6]), collapse=', '), '.')
+        } else {
+            'Podaj imię'
+        }
     })
 
   output$dendro <- renderPlot({

@@ -1,10 +1,10 @@
 ## BRAIAN - Bardzo Rzetelny Asystent Imion Aplikowanych Noworodkom
 
-Jest to narzędzie do wglądu w trendy nadawanych imion. Bazuje na otwartych [danych publicznych](https://dane.gov.pl/dataset/219) z lat 2000-2017. Pozwala:
+Jest to narzędzie do wglądu w trendy nadawanych imion. Bazuje na otwartych [danych publicznych](https://dane.gov.pl/dataset/219) z lat 2000-2019.
 
-* szybko ocenić jak przebiegała historia popularności danego imienia,
-* porównać imiona mniej i bardziej popularne,
-* pogrupować imiona po podobnych trendach.
+* Pozwala szybko ocenić jak przebiegała historia popularności danego imienia.
+* Porównuje imiona mniej i bardziej popularne.
+* Rekomenduje imiona, które mogą się podobać.
 
 Koło ratunkowe dla tych, których dziecko otrzyma niedługo imię kierownika Urzędu Stanu Cywilnego.
 
