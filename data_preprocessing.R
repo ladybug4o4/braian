@@ -82,18 +82,18 @@ ROK_PLEC_COUNTS <- sapply(IMIE_ROK_COUNTS_PER_PLEC, function(i) colSums(i, na.rm
 #Liczba nadanych imion na 1000 urodzen
 k <- IMIE_ROK_COUNTS_PER_PLEC[['K']]
 m <- IMIE_ROK_COUNTS_PER_PLEC[['M']]
-df_1000_k = t(t(k)/colSums(k, na.rm=TRUE)*1000)
-df_1000_m = t(t(m)/colSums(m, na.rm=TRUE)*1000)
+df_100_k = t(t(k)/colSums(k, na.rm=TRUE)*100)
+df_100_m = t(t(m)/colSums(m, na.rm=TRUE)*100)
 
 ##### test #####
 # k['ŻANETA', '2017'] = 33
 # colSums_2019 = 188557 urodzen dziewczynek.
-k['ŻANETA', '2017'] / colSums(k, na.rm=TRUE)['2017'] * 1000 == df_1000_k['ŻANETA', '2017']
+k['ŻANETA', '2017'] / colSums(k, na.rm=TRUE)['2017'] * 100 == df_100_k['ŻANETA', '2017']
 ##### koniec testu ######
 
-DF_1000_PER_PLEC <- list()
-DF_1000_PER_PLEC[['K']] <- as.data.frame(df_1000_k)
-DF_1000_PER_PLEC[['M']] <- as.data.frame(df_1000_m)
+DF_100_PER_PLEC <- list()
+DF_100_PER_PLEC[['K']] <- as.data.frame(df_100_k)
+DF_100_PER_PLEC[['M']] <- as.data.frame(df_100_m)
 
 #########################################################
 ## NAMES_300
