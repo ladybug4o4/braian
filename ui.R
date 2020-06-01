@@ -22,7 +22,9 @@ dashboardPage(
             padding: 20px;
             overflow: hidden;
             color: white;
-    }'
+    }
+    .shiny-output-error { visibility: hidden; },
+    .shiny-output-error:before { visibility: hidden; }'
 ))),
 
     tags$script(HTML('
@@ -36,14 +38,14 @@ dashboardPage(
         column(width=10, tags$div(title=HTML('Kliknij, by zmienić płeć   😉'), radioGroupButtons('plec', label=NULL,
                        choiceNames = c('<br>chłopcy', '<br>dziewczynki'),
                        choiceValues = list('M','K'), status = "primary",
-                       selected='K', justified=TRUE, checkIcon = list(
+                       selected='M', justified=TRUE, checkIcon = list(
                         yes = icon("smile-beam", "fa-3x"),
                         no = icon("meh-blank", "fa-3x")))))
     ),
         verticalTabsetPanel(contentWidth=10, color='#357ca5',
              verticalTabPanel('RANKINGI', icon=icon('stats', 'fa-3x', lib='glyphicon'),
-                h3(textOutput('title')),
-                box(width=12, title = tags$b(textOutput('opts1_title')), collapsible = TRUE, collapsed = TRUE, solidHeader = TRUE,
+                h3(textOutput('title'), style='font-family:Georgia;'),
+                box(width=12, status='primary', title = tags$b(textOutput('opts1_title')), collapsible = TRUE, collapsed = TRUE, solidHeader = TRUE,
                     chooseSliderSkin("Round"),
                     setSliderColor(c("#357ca5","#357ca5","#357ca5","#357ca5","#357ca5","#357ca5"), 1:6),
                     sliderTextInput('rok', NULL,
@@ -68,34 +70,31 @@ dashboardPage(
                      plotlyOutput("Plot", height='500px'),
                     tags$br(),
                     switchInput('switch', value=FALSE, labelWidth='70px', onLabel='wyłącz warstwy', offLabel='włącz warstwy',
-                        label='<i class=\"fas fa-chart-area\" style=\"font-size: 1.5em\"></i>') # materialSwitch, status='primary')
+                        label='<i class=\"fas fa-chart-area\" style=\"font-size: 1.5em\"></i>')
                  )
              ),
              verticalTabPanel('MAPA IMION', icon=icon('map', 'fa-3x'),
-                 h3('Podobne imiona i rekomendacje'),
-                 p('W tym miejscu możesz podać ulubione imię, a Asystent bardzo rzetelnie podpowie, jakie inne imiona mogą Ci się podobać.'),
-                 searchInput(
-                                      inputId = "search", label = '',
-                                      placeholder = "znajdź imię na mapie",
-                                      btnSearch = icon("search"),
-                                      btnReset = icon("remove"),
-                                      width = "300px"
-                                    ),
+                 h3('Podobne imiona i rekomendacje', style='font-family:Georgia;font-family:Georgia;'),
+                 p('W tym miejscu możesz podać ulubione imię, a Asystent bardzo rzetelnie podpowie, jakie inne imiona mogą Ci się podobać.',  style='font-family:Arial;'),
+                 uiOutput('search_imie'),
+                 column(width=5, offset=3, align = 'center', style='color:white;background-color:#4085ad;border-radius:5px;',
+                        p(htmlOutput('names_recomm'), style='font-style:italic;font-family:Arial;')),
                  conditionalPanel(condition="!input.switch2", plotOutput("names_map", height='600px')),
                  conditionalPanel(condition="input.switch2", plotOutput("dendro", height='1000px', width='100%')),
                  fluidRow(column(width=3,
-                 switchInput('switch2', labelWidth = "40px", width='100%', handleWidth='200px',
-                            label='<i class=\"fa fa-eye\" style=\"font-size: 1.5em\"></i>',
-                            onLabel = "<i class=\"fa fa-map\" style=\"font-size: 1.2em\"></i><br>widok mapy",
-                            offLabel = '<i class=\"glyphicon glyphicon-tree-deciduous\" style=\"font-size: 1.2em\"></i><br>widok drzewa',
-                            onStatus = 'primary', offStatus = 'primary',
-                            value=FALSE)),column(width=4),column(width=5,
-                 box(width = 12, status = "primary", solidHeader=T, collapsible=TRUE, collapsed=TRUE,
+                         switchInput('switch2', labelWidth = "40px", width='100%', handleWidth='100px',
+                            label='<i class=\"glyphicon glyphicon-tree-deciduous\" style=\"font-size: 1.2em\"></i>',
+                            onLabel = "widok mapy",
+                            offLabel = 'widok drzewa',
+                            onStatus = 'primary', offStatus = 'primary'
+                            )
+                 ),column(width=4),column(width=5,
+                     box(width = 12, status = "primary", solidHeader=T, collapsible=TRUE, collapsed=TRUE,
                             title = textOutput('opts2_title'),
-                            conditionalPanel(condition="input.switch2", #wellPanel(width='50%',
+                            conditionalPanel(condition="input.switch2",
                                     sliderInput('nclust', NULL, value=25, min=2, max=50, step=1)
                                 ),
-                            conditionalPanel(condition="!input.switch2", #wellPanel(width='50%',
+                            conditionalPanel(condition="!input.switch2",
                                  tags$style(type = "text/css", ".irs-grid-pol.small {height: 0px;}"),
                                     sliderInput('n_sim', NULL, value=5, min=1, max=50, step=1, width='100%')
                                 )

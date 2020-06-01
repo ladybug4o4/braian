@@ -52,17 +52,19 @@ function(input, output, session) {
   })
 
   observe({
-      updateSelectInput(session, 'imie', label = NULL,
-                      choices = names_300_rank(),
-                      selected = names_rank()[49])
       updateSliderInput(session, 'range',  min = 1, max = length(NAMES_300[[input$plec]]), step=1)
-
+      updateSwitchInput(session, 'switch2',
+            label = ifelse(input$switch2,
+                '<i class=\"fa fa-map\" style=\"font-size: 1.2em\"></i>',
+                '<i class=\"glyphicon glyphicon-tree-deciduous\" style=\"font-size: 1.2em\"></i>'))
   })
+
     observeEvent( c(input$range, input$plec, input$rok), {
       updateSelectInput(session, 'imiona', label = NULL,
                       choices = names_rank(),
                       selected = popular_names())
     })
+
     observeEvent(input$clear, {
                 updateSelectInput(session, 'imiona', label = NULL, choices = names_rank(), selected = NULL)
     })
@@ -82,10 +84,10 @@ function(input, output, session) {
         df
     }, class = 'cell-border stripe', selection = "none", options = list(
             columnDefs = list(list(width = '20px', targets = 0)),
-            pageLength=12,
+            pageLength=15,
             dom = '<f>tp',
             pagingType = "simple",
-            language = list(info = '', paginate = list('next'=">", previous="<"))
+            language = list(info = '', paginate = list('next'="►", previous="◄"))
     ))
 
       output$Plot <- renderPlotly({
@@ -137,8 +139,7 @@ function(input, output, session) {
           scale_y_continuous(breaks = brks, labels = lbls) +
           coord_flip() +
           scale_fill_manual(values=c("#DE7A22", "#F4CC70")) +
-          # labs(title = sprintf('Najpopularniejsze imiona w %s', input$rok2), fill='') +
-          labs(title = NULL, fill='') +
+          labs(title = NULL, fill='', y='Liczba dzieci') +
           theme_bw() +
           theme(legend.position = 'top')
   }, res=100)
@@ -217,6 +218,16 @@ function(input, output, session) {
     txt
   })
 
+    ###### MAPA IMION ######
+    output$search_imie <- renderUI({
+         searchInput(
+                      inputId = "search", label = '', value=ifelse(input$plec == 'M', 'Brajan', 'Jessica'),
+                      placeholder = "znajdź imię na mapie",
+                      btnSearch = icon("search"),
+                      btnReset = icon("remove"),
+                      width = "300px"
+         )
+    })
 
   dissNms <- reactive({
     if(input$plec == 'M'){
@@ -239,12 +250,12 @@ function(input, output, session) {
         fit
     })
 
-  cols <- function(brewer_palette='Dark2'){
-    if(input$nclust > 8){
-      c <- RColorBrewer::brewer.pal(8, brewer_palette)
-      c <- rep(c, length.out = input$nclust)
+  cols <- function(){
+    palette <- c(RColorBrewer::brewer.pal(8, 'Set2'), RColorBrewer::brewer.pal(8, 'Dark2'))
+    if(input$nclust > 16){
+      c <- rep(palette, length.out = input$nclust)
     }else{
-      c <- RColorBrewer::brewer.pal(input$nclust, brewer_palette)
+      c <- palette[1:input$nclust] #RColorBrewer::brewer.pal(input$nclust, brewer_palette)
     }
     return(c)
   }
@@ -273,39 +284,36 @@ function(input, output, session) {
             geom_point(color='#787270') +
             geom_text(data=df[df$groups==2,], size=3, color='#6a6463', hjust=0, vjust=0) +
             scale_fill_brewer(palette='Set2') +
-            # geom_label_repel(data=df[df$groups!=2,], aes(fill=groups)) +
             theme_void() +
             coord_fixed(ratio = 1) +
             theme(legend.position='none') -> gg
         if(toupper(input$search) %in% NAMES_300[[input$plec]])
-            gg +  geom_label_repel(data=df[df$groups!=2,], aes(fill=groups)) else
-                gg
-
-
+                gg +  geom_label_repel(data=df[df$groups!=2,], aes(fill=groups)) else
+                    gg
     })
 
-    output$names_recomm <- renderText({
+    output$names_recomm <- renderUI({
         df <- similar_names()
         if(toupper(input$search) %in% rownames(df)){
             df <- df[order(df$r2), ]
-            paste(sprintf('Jeśli podoba ci się imię %s, mogą spodobać ci się również: ', input$search),
-                    paste0(as.character(df$names[2:6]), collapse=', '), '.')
+            HTML(paste(sprintf('Jeśli podoba ci się imię %s, mogą spodobać ci się również:<br><b>', input$search),
+                    paste0(as.character(df$names[2:6]), collapse=', '), '</b>.'))
         } else {
             'Podaj imię'
         }
     })
 
   output$dendro <- renderPlot({
-    hc <- hclust(as.dist(dissNms()), 'ward.D2')
-      if(toupper(input$search) %in% hc$labels){
-          idx <- which(hc$labels == toupper(input$search))
-          hc$labels[idx] <- paste('~~~~  ', hc$labels[idx], '  ~~~~')
-      }
-    clust_k <- cutree(hc, k=input$nclust)
-    par(mar = par()$mar * c(.1,1,0,1))
-    plot(as.phylo(hc),
-         type = "fan",
-         cex=.6, tip.color=cols()[clust_k])
+        hc <- hclust(as.dist(dissNms()), 'ward.D2')
+          if(toupper(input$search) %in% hc$labels){
+              idx <- which(hc$labels == toupper(input$search))
+              hc$labels[idx] <- paste('~~~~~    ', hc$labels[idx], '    ~~~~~')
+          }
+        clust_k <- cutree(hc, k=input$nclust)
+        par(mar = par()$mar * c(.1,1,0,1))
+        plot(as.phylo(hc),
+             type = "fan",
+             cex=.6, tip.color=cols()[clust_k])
   }, res=100)
 
   session$allowReconnect(FALSE)
