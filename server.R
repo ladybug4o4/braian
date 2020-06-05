@@ -76,14 +76,16 @@ function(input, output, session) {
 })
 
     output$rank_table <- renderDataTable({
-        out <- names_rank()
-        df <- strsplit(names(out), '\\. ')
-        df <- do.call('rbind', df)
-        colnames(df) <- c('Miejsce' , 'Imię')
-        df[,'Miejsce'] <- paste0(df[,'Miejsce'], '.')
-        df
-    }, class = 'cell-border stripe', selection = "none", options = list(
-            columnDefs = list(list(width = '20px', targets = 0)),
+        rok <- as.character(input$rok)
+        df <- IMIE_ROK_COUNTS_PER_PLEC[[input$plec]]
+        df[,'Imię'] <- rownames(df)
+        df <- df[,c('Imię', rok)]
+        df <- df[order(-df[,rok]),]
+        colnames(df) <- c('Imię', 'Liczba')
+        df[,'Miejsce'] <- paste0(1:nrow(df),'. ')
+        df[,c('Miejsce', 'Imię', 'Liczba')]
+    }, class = 'cell-border stripe', selection = "none", rownames=F, options = list(
+            columnDefs = list(list(width = '15px', targets = 0)),
             pageLength=15,
             dom = '<f>tp',
             pagingType = "simple",
@@ -96,8 +98,17 @@ function(input, output, session) {
       validate(need(dim(df)[1] > 0, message = "podaj imię..."))
       df <- melt(df)
       colnames(df) <- c('Imię', 'Rok', 'Procent')
-      df[,'Wartość'] <- sprintf("%.5f%%", df[,'Procent'])
-      gg <- ggplot(data=df, aes_string(x='Rok', y='Procent', group='Imię', color='Imię', fill='Imię', label='Wartość')) +
+      df[,'Wartość'] <- sprintf("%.3f%%", df[,'Procent'])
+
+      df2 <- IMIE_ROK_COUNTS_PER_PLEC[[input$plec]][input$imiona, ]
+      df2[,'Imię'] <- rownames(df2)
+      df2 <- melt(df2)
+      colnames(df2) <- c('Imię', 'Rok', 'liczba_')
+      df <- merge(df, df2)
+      df[,'Liczba'] = paste0(df[,'liczba_'], ' (', df[,'Wartość'], ')')
+
+      gg <- ggplot(data=df, aes(x=Rok, y=Procent, color=`Imię`, fill=`Imię`, group=`Imię`,
+                                        label=Liczba)) +
           theme_bw() +
           theme(axis.text.x = element_text(angle=90)) +
           labs(y=sprintf('%% %s o tym imieniu', odmiana()), x='', color='', title='') +
