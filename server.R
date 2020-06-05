@@ -96,7 +96,7 @@ function(input, output, session) {
       validate(need(dim(df)[1] > 0, message = "podaj imię..."))
       df <- melt(df)
       colnames(df) <- c('Imię', 'Rok', 'Procent')
-      df[,'Wartość'] <- sprintf("%.2f%%", df[,'Procent'])
+      df[,'Wartość'] <- sprintf("%.5f%%", df[,'Procent'])
       gg <- ggplot(data=df, aes_string(x='Rok', y='Procent', group='Imię', color='Imię', fill='Imię', label='Wartość')) +
           theme_bw() +
           theme(axis.text.x = element_text(angle=90)) +
@@ -200,19 +200,22 @@ function(input, output, session) {
       sprintf('<b>W roku %i:</b>', input$rok2),
       sprintf('<b>1.</b> %i najpopularniejszych imion nosiło %.2f%% dziewczynek i %.2f%% chłopców,',
                n, info1$`Pokrycie [%]`[1], info1$`Pokrycie [%]`[2]),
-      sprintf('<b>2.</b> połowa urodzonych dziewczynek/chłopców otrzymała jedno z %i/%i najpopularniejszych imion.',
+      sprintf('<b>2.</b> Połowa urodzonych dziewczynek/chłopców otrzymała jedno z %i/%i najpopularniejszych imion.',
               info2$K$`Liczba imion`, info2$M$`Liczba imion`),
-      sprintf('<b>3.</b> wszystkich urodzonych po 2000 roku chłopców o imieniu Jakub jest %i i jest to %.2f%% wszystkich urodzonych w tym czasie chłopców.',
+      sprintf('<b>3.</b> Wszystkich urodzonych po 2000 roku chłopców o imieniu Jakub jest %i i jest to %.2f%% wszystkich urodzonych w tym czasie chłopców.',
                 jakub_ile[rok2_chr], jakub_ile_procent[rok2_chr]),
-      sprintf('<b>4.</b> wszystkich urodzonych po 2000 roku dziewcząt o imieniu Julia jest %i i jest to %.2f%% wszystkich urodzonych w tym czasie dziewcząt.',
+      sprintf('<b>4.</b> Wszystkich urodzonych po 2000 roku dziewcząt o imieniu Julia jest %i i jest to %.2f%% wszystkich urodzonych w tym czasie dziewcząt.',
                 julia_ile[rok2_chr], julia_ile_procent[rok2_chr]),
+      sprintf('<b>5.</b> Imię MIESZKO było nadawane 3.5 raza częściej niż WŁADYSŁAW.'),
+      sprintf('<b>5.</b> Imię LEA było nadawane 3.2 raza częściej niż SYLWIA.'),
+      sprintf('<b>6.</b> Imię BRAJAN było nadawane częściej niż NORBERT, MARIUSZ, JANUSZ czy MARIAN.'),
+      sprintf('<b>6.</b> Imię JESSICA było nadawane częściej niż ANETA, BEATA, HALINA czy ILONA.'),
 
       '<br><b>Ponadto:</b>',
       '<b>5.</b> W 2001 roku 1 na 10 chłopców otrzymuje imię Jakub.',
       '<b>6.</b> W 2000 roku imiona Antoni i Jarosław otrzymało ok. 0.2% chłopców. 17 lat później imię Jarosław wybierane jest 11 razy rzadziej, a Antoni 28 razy częściej.',
       '<b>7.</b> 10 najpopularniejszych imion dziewczynek w 2000 roku otrzymało 45% dziewczynek. 17 lat później te same imiona dostało 15% dziewczynek.',
       '<b>8.</b> Z roku na rok imiona chłopców i dziewczynek są coraz bardziej różnorodne.',
-
       sep = '<br>'
     ) -> txt
     txt
@@ -272,17 +275,17 @@ function(input, output, session) {
             r2 <- (x-x0)^2 + (y-y0)^2
             similar <- names(head(sort(r2), input$n_sim+1))
             groups <- ifelse(nms %in% imie, 0, ifelse(nms %in% similar, 1, 2))
-            df <- data.frame(names = nms, x=x, y=y, groups = as.factor(groups), r2 = r2)
+            df <- data.frame(text = nms, x=x, y=y, groups = as.factor(groups), r2 = r2)
         } else {
-            df <- data.frame(names = nms, x=x, y=y, groups = as.factor(2), r2=0)
+            df <- data.frame(text = nms, x=x, y=y, groups = as.factor(2), r2=0)
         }
     })
 
     output$names_map <- renderPlot({
         df <- similar_names()
-        ggplot(data = df, aes(x=x,y=y,label=names)) +
+        ggplot(data = df, aes(x=x,y=y,label=text)) +
             geom_point(color='#787270') +
-            geom_text(data=df[df$groups==2,], size=3, color='#6a6463', hjust=0, vjust=0) +
+            geom_text(data=df[df$groups==2,], size=3, color='#6a6463', hjust=1, vjust=1) +
             scale_fill_brewer(palette='Set2') +
             theme_void() +
             coord_fixed(ratio = 1) +
@@ -297,7 +300,7 @@ function(input, output, session) {
         if(toupper(input$search) %in% rownames(df)){
             df <- df[order(df$r2), ]
             HTML(paste(sprintf('Jeśli podoba ci się imię %s, mogą spodobać ci się również:<br><b>', input$search),
-                    paste0(as.character(df$names[2:6]), collapse=', '), '</b>.'))
+                    paste0(as.character(df$text[2:6]), collapse=', '), '</b>.'))
         } else {
             'Podaj imię'
         }
