@@ -20,8 +20,12 @@ RUN wget --no-verbose https://download3.rstudio.org/ubuntu-14.04/x86_64/VERSION 
     rm -f version.txt ss-latest.deb && \
     . /etc/environment && \
     R -e "install.packages(c('shiny', 'rmarkdown'), repos='$MRAN')" && \
+    R -e "install.packages(c('BiocManager', 'ggplot2', 'plotly'), repos='$MRAN')" && \
+    R -e "install.packages(c('shinydashboard', 'shinyWidgets', 'shinyBS'), repos='$MRAN')" && \
+    R -e "install.packages(c('DT', 'ape', 'ggrepel', 'reshape2'), repos='$MRAN')" && \
     cp -R /usr/local/lib/R/site-library/shiny/examples/* /srv/shiny-server/ && \
     chown shiny:shiny /var/lib/shiny-server
+
 
 EXPOSE 3838
 
