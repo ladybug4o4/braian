@@ -19,4 +19,12 @@ Ciekawsze wnioski:
 
 Aplikacja gotowa do użycia, kliknij --> [tutaj](https://katsob.shinyapps.io/braian/)
 
+### Instalacja i uruchamianie
 
+Instalacja została przygotowana na bazie obrazu `rocker/shiny` a dokładniej repoztyorium https://github.com/rocker-org/shiny.
+
+Po wykonaniu komendy
+```python
+docker-compose up
+```
+aplikacja jest dostępna pod adresem http://localhost/brian/.
