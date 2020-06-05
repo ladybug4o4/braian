@@ -43,7 +43,7 @@ dashboardPage('green',
                dzieci otrzymuje teraz Twoje imię? Trafiłeś w odpowiednie miejsce. ', tags$br(),tags$br(),
                 'Wybierz płeć dziecka poniżej. W zakładce',
                 tags$b('Rankingi imion', style='color:green'), ' możesz porównać ze sobą statystyki imion z ostatnich
-                20 lat. W łatwy sposób wyświetlisz najpopularnieszych 5, 10, 20 a nawet więcej imion w 2019 roku i poprzednich latach.
+                20 lat. W łatwy sposób wyświetlisz najpopularnieszych 5, 10, 20 a nawet więcej imion.
                 Zobaczysz ilu chłopców miało na imię Antek lub ile dziewczynek dostało imię Julia w ostatnich latach.',
                 tags$br(), tags$br(), 'A może podoba Ci się jakieś imię, ale ktoś już', tags$i('je zajął'), ' albo jest zbyt
                 powszechne? Wejdź w ', tags$b("Podobne imiona i rekomendacje", style='color:green'),

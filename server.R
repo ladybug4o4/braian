@@ -20,7 +20,7 @@ YEAR <- 2019
 function(input, output, session) {
 
   output$title <- renderText({
-        sprintf('Popularność imion %s w roku:', odmiana())
+        sprintf('Statystyki imion %s w roku:', odmiana())
     })
 
   df_100 <- reactive({
